@@ -178,9 +178,95 @@ function PolyK.ContainsPoint(p,px,py)
 	return (depth % 2) == 1
 end
 
---Returns a list with the triangle vertices
+function PolyK.Convex(ax,ay,bx,by,cx,cy)
+	return (ay-by)*(cx-bx) + (bx-ax)*(cy-by) >= 0
+end
+
+function PolyK.PointInTriangle(px,py,ax,ay,bx,by,cx,cy)
+	local v0x = cx-ax;
+	local v0y = cy-ay;
+	local v1x = bx-ax;
+	local v1y = by-ay;
+	local v2x = px-ax;
+	local v2y = py-ay;
+	
+	local dot00 = v0x*v0x+v0y*v0y;
+	local dot01 = v0x*v1x+v0y*v1y;
+	local dot02 = v0x*v2x+v0y*v2y;
+	local dot11 = v1x*v1x+v1y*v1y;
+	local dot12 = v1x*v2x+v1y*v2y;
+	
+	local invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
+	local u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+	local v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+	-- Check if point is in triangle
+	return (u >= 0) and (v >= 0) and(u + v < 1);
+end
+
+--Returns a list with the indices of the vertices
+--that make each triangle in the polygon
 function PolyK.Triangulate(p)
 
+	local n = #p / 2
+	if(n<3) then
+		return {}
+	end
+	local tgs,avl = {},{}
+	for i=0,n-1 do
+		table.insert(avl,i+1)
+	end
+	local i = 0
+	local al = n
+
+	while (al > 3) do
+		local i0 = avl[(i+0)%al+1]
+		local i1 = avl[(i+1)%al+1]
+		local i2 = avl[(i+2)%al+1]
+
+		local ax,ay = p[2*i0+1], p[2*i0+2]
+		local bx,by = p[2*i1+1], p[2*i1+2]
+		local cx,cy = p[2*i2+1], p[2*i2+2]
+
+		local earFound = false
+
+		if(PolyK.Convex(ax,ay,bx,by,cx,cy)) then
+			earFound = true
+			for j=0,al-1 do
+				local vi =  avl[j+1]
+				if(vi == i0 or vi == i1 or vi == i2) then
+
+				else
+					if( PolyK.PointInTriangle(p[2*vi+1],p[2*vi+2],ax,ay,bx,by,cx,cy)) then
+						earFound = false
+						break
+					end
+				end
+			end
+		end
+
+		if(earFound) then
+			table.insert(tgs,i0)
+			table.insert(tgs,i1)
+			table.insert(tgs,i2)
+			--avl.splice((i+1)%al,1) r
+			local index = (i+1)%al + 1
+			table.remove(avl,index)
+			al = al-1
+			i  = 0
+		elseif (i> 3*al) then
+			i = i+1
+			break -- no convex angles
+		else
+			i = i+1
+		end
+
+	end
+	table.insert( tgs, avl[1] )
+	table.insert( tgs, avl[2] )
+	table.insert( tgs, avl[3] )
+
+	return tgs
 end
 
 return PolyK

@@ -57,5 +57,22 @@ describe("Polyk tests",function ()
 			assert.False(Polyk.ContainsPoint(p,-1,-1))
 		end)
 	end)
+
+	describe("Triangulate",function()
+		it("Already a triangle",function()
+			local p={}
+			p[1] = 0
+			p[2] = 0
+			p[3] = 1
+			p[4] = 1
+			p[5] = 2
+			p[6] = 0
+
+			local triangles = Polyk.Triangulate(p)
+			-- returns the same 3 vertices
+			assert.equals(#triangles,3)
+
+		end)
+	end)
 end)
 
