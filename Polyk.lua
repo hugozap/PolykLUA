@@ -205,7 +205,7 @@ function PolyK.PointInTriangle(px,py,ax,ay,bx,by,cx,cy)
 end
 
 --Returns a list with the indices of the vertices
---that make each triangle in the polygon
+--that make each triangle in the polygon ( doesn't return the )
 function PolyK.Triangulate(p)
 
 	local n = #p / 2

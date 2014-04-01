@@ -73,6 +73,25 @@ describe("Polyk tests",function ()
 			assert.equals(#triangles,3)
 
 		end)
+		it("Two triangles",function()
+   			--    *
+			-- *  *
+			--    *
+			local p={}
+			p[1] = 0
+			p[2] = 0
+			p[3] = 1
+			p[4] = 1
+			p[5] = 2
+			p[6] = 0
+			p[7] = 0
+			p[8] = -1
+
+			local triangles = Polyk.Triangulate(p)
+			-- returns the same 3 vertices
+			assert.equals(#triangles,6)
+
+		end)
 	end)
 end)
 
