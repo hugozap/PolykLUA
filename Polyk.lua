@@ -1,6 +1,5 @@
 -- PolyK library ported to LUA,
--- Ported by Hugo Zapata
--- original code by Ivan Kuckir
+-- original code by Ivan Kuckir, ported tu LUA by Hugo Zapata @hugozap
 
 -- 		Copyright (c) 2012 Ivan Kuckir
 
@@ -179,6 +178,14 @@ function PolyK.ContainsPoint(p,px,py)
 end
 
 function PolyK.Convex(ax,ay,bx,by,cx,cy)
+	print('\n')
+	print('ax:'..ax)
+	print('ay:'..ay)
+	print('bx:'..bx)
+	print('by:'..by)
+	print('cx:'..cx)
+	print('cy:'..cy)
+
 	return (ay-by)*(cx-bx) + (bx-ax)*(cy-by) >= 0
 end
 
@@ -224,9 +231,9 @@ function PolyK.Triangulate(p)
 		local i1 = avl[(i+1)%al+1]
 		local i2 = avl[(i+2)%al+1]
 
-		local ax,ay = p[2*i0+1], p[2*i0+2]
-		local bx,by = p[2*i1+1], p[2*i1+2]
-		local cx,cy = p[2*i2+1], p[2*i2+2]
+		local ax,ay = p[2*i0], p[2*i0]
+		local bx,by = p[2*i1], p[2*i1]
+		local cx,cy = p[2*i2], p[2*i2]
 
 		local earFound = false
 
@@ -237,7 +244,7 @@ function PolyK.Triangulate(p)
 				if(vi == i0 or vi == i1 or vi == i2) then
 
 				else
-					if( PolyK.PointInTriangle(p[2*vi+1],p[2*vi+2],ax,ay,bx,by,cx,cy)) then
+					if( PolyK.PointInTriangle(p[2*vi],p[2*vi],ax,ay,bx,by,cx,cy)) then
 						earFound = false
 						break
 					end
