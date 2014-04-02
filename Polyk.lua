@@ -276,4 +276,39 @@ function PolyK.Triangulate(p)
 	return tgs
 end
 
+
+function shallow_copy(t)
+  local t2 = {}
+  for k,v in pairs(t) do
+    t2[k] = v
+  end
+  return t2
+end
+
+function PolyK._P(x,y)
+	local self = {}
+	self.x = x
+	self.y = y
+	self.flag = false
+	return self
+end
+
+function PolyK.Slice(p,ax,ay,bx,by)
+	if (PolyK.ContainsPoint(p ,ax ,ay) or PolyK.ContainsPoint(p,bx,by)) then
+		return shallow_copy(p)
+	end
+	local a = PolyK._P(ax,bx)
+	local b = PolyK._P(bx,by)
+	local iscs = {} -- intersections
+	local ps = {} -- points
+
+	-- Create array with points
+	for i=1, #p, 2 do
+		table.insert(ps,PolyK._P(p[i],p[i+1]))
+	end
+
+
+end
+
+
 return PolyK

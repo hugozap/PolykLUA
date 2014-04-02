@@ -93,5 +93,22 @@ describe("Polyk tests",function ()
 
 		end)
 	end)
+
+	describe("Slice",function()
+		it("Slice a triangle should get 2 polygons",function()
+			local p={}
+			p[1] = 0
+			p[2] = 0
+			p[3] = 1
+			p[4] = 1
+			p[5] = 2
+			p[6] = 0
+
+			local list = Polyk.Slice(p,-1,0.5,5,0.5)
+			assert.equals(2,#list)
+
+		end)
+		--TODO: add a more complex test to slice
+	end)
 end)
 
